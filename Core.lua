@@ -15,10 +15,26 @@ function PHFormat(message, markType)
 	return __merge(_L.Marks[mark], result, _L.Marks[mark])
 end
 
+local lastMessage = nil
 function PHSayInstance(message, markType)
 
+	if message == lastMessage then
+		return
+	end
+
+	lastMessage = message
+
+
+	--!!!!!!!!!!
+	print(PHFormat(message, markType))
 	-- Hook here
-	SendChatMessage(PHFormat(message, markType), "INSTANCE_CHAT" )
+	--SendChatMessage(PHFormat(message, markType), "INSTANCE_CHAT" )
+end
+
+function PHSay(message, markType)
+	print(PHFormat(message, markType))
+	-- Hook here
+	--SendChatMessage(PHFormat(message, markType), "SAY" )
 end
 
 function __merge(str1, str2, str3)
@@ -47,4 +63,12 @@ function __unpackToString(...)
       result = result ..tostring(i)..") ".. tostring(args[i]) .. " | "
 	end
 	return result
+end
+
+function __tostring(obj)
+	if obj == nil then
+		return "nil"
+	else
+		return tostring(obj)
+	end
 end

@@ -58,6 +58,43 @@ function IsPlayerFromBattlegroundRaid(playerName)
 	return false
 end
 
+-- Получить информацию о человеке на поле боя
+function GetPlayerGroup(playerName)
+	if not IsInsidePvpZone() then
+		return "-?-"
+	end
+
+	local i, subgroup, name
+	for i = 1, 40 do 
+
+		-- Returns information about a member of the player's raid
+		-- http://wowprogramming.com/docs/api/GetRaidRosterInfo
+		-- name - Name of the raid member (string)
+		-- rank - Rank of the member in the raid (number)
+		--     0 - Raid member
+		--     1 - Raid Assistant
+		--     2 - Raid Leader
+		-- subgroup - Index of the raid subgroup to which the member belongs (between 1 and MAX_RAID_GROUPS) (number)
+		-- level - Character level of the member (number)
+		-- class - Localized name of the member's class (string)
+		-- fileName - A non-localized token representing the member's class (string)
+		-- zone - Name of the zone in which the member is currently located (string)
+		-- online - 1 if the member is currently online; otherwise nil (1nil)
+		-- isDead - 1 if the member is currently dead; otherwise nil (1nil)
+		-- role - Group role assigned to the member (string)
+		--     MAINASSIST
+		--     MAINTANK
+		-- isML - 1 if the member is the master looter; otherwise nil (1nil)
+		name, _, subgroup=GetRaidRosterInfo(i);
+		if name == playerName then 
+			return subgroup;
+		end;
+	end;
+
+	return "?"
+end
+
+-- Плеер находится в составе рейда или группы
 function IsPlayerInRaid()
 	return 
 		-- http://wowprogramming.com/docs/api/UnitInParty
@@ -78,8 +115,12 @@ end
 
 -- Признак того что поле боя уже идёт.
 function IsBattlegroundGoing()
+	local playerCount = GetNumBattlefieldScores()
+	if playerCount <= 1 or playerCount == nil then
+		return nil
+	end
 
-	for i = 1, GetNumBattlefieldScores() do 
+	for i = 1, playerCount do 
 		-- http://wowprogramming.com/docs/api/GetBattlefieldScore
 		local name, 
 			killingBlows, 
@@ -96,4 +137,14 @@ function IsBattlegroundGoing()
 	end
 
 	return false
+end
+
+-- Имя игрока без реалма
+function GetShortPlayerName(playerName)   
+   local dPos = string.find(playerName, "-")
+   if not dPos then 
+      return playerName
+   end
+   
+   return string.sub(playerName,  1, dPos - 1)
 end
