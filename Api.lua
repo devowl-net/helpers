@@ -42,16 +42,15 @@ end
 function eventHandler(self, eventName, ...)
 	if eventName == nil then return end
 
-	if self.WorkCallback ~= nil and self.WorkCallback() == false then 
-		-- проверяем обрабатываем или нет события в данный момент
-		return
-	end
-
-	if self.Events[eventName] then
+	if self.Events[eventName] and EventWorks(self) then
 		FireEvent(self, eventName, ...)
 	elseif self.Internal_Events[eventName] then
 		FireUnfilteredEvent(self, eventName, ...)
 	end
+end
+
+function EventWorks(self)
+	return self.WorkCallback ~= nil and self.WorkCallback() == true
 end
 
 function FireUnfilteredEvent(self, eventName, param1, param2, ...)
@@ -60,7 +59,7 @@ function FireUnfilteredEvent(self, eventName, param1, param2, ...)
 	-- param2 - Имя события
 	eventName = param2
 	
-	if self.Events[eventName] then
+	if self.Events[eventName] and EventWorks(self) then
 		self[eventName](self, ...)
 	end
 	

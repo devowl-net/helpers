@@ -1,5 +1,6 @@
 
-Common = { };
+local Common = { };
+local _guildCache = {}
 
 function IsInsidePvpZone()
 	local instance, instanceType = IsInInstance();
@@ -116,7 +117,7 @@ end
 -- Признак того что поле боя уже идёт.
 function IsBattlegroundGoing()
 	local playerCount = GetNumBattlefieldScores()
-	if playerCount <= 1 or playerCount == nil then
+	if playerCount <= 15 or playerCount == nil then
 		return nil
 	end
 
@@ -141,10 +142,77 @@ end
 
 -- Имя игрока без реалма
 function GetShortPlayerName(playerName)   
-   local dPos = string.find(playerName, "-")
-   if not dPos then 
-      return playerName
-   end
-   
-   return string.sub(playerName,  1, dPos - 1)
+	if not playerName then
+		return "-nil-"
+	end
+
+	local dPos = string.find(playerName, "-")
+	if not dPos then 
+	   return playerName
+	end
+	
+	return string.sub(playerName,  1, dPos - 1)
+end
+
+
+
+function GetRaidGuilds()
+	local buffer = {}
+
+	local i, subgroup, name
+	for i = 1, 40 do 
+
+		-- Returns information about a member of the player's raid
+		-- http://wowprogramming.com/docs/api/GetRaidRosterInfo
+		-- name - Name of the raid member (string)
+		-- rank - Rank of the member in the raid (number)
+		--     0 - Raid member
+		--     1 - Raid Assistant
+		--     2 - Raid Leader
+		-- subgroup - Index of the raid subgroup to which the member belongs (between 1 and MAX_RAID_GROUPS) (number)
+		-- level - Character level of the member (number)
+		-- class - Localized name of the member's class (string)
+		-- fileName - A non-localized token representing the member's class (string)
+		-- zone - Name of the zone in which the member is currently located (string)
+		-- online - 1 if the member is currently online; otherwise nil (1nil)
+		-- isDead - 1 if the member is currently dead; otherwise nil (1nil)
+		-- role - Group role assigned to the member (string)
+		--     MAINASSIST
+		--     MAINTANK
+		-- isML - 1 if the member is the master looter; otherwise nil (1nil)
+		name, _ = GetRaidRosterInfo(i);
+		
+		if name then
+			if _guildCache[name] then
+				buffer[name] = _guildCache[name]
+			else
+				local guildName, guildRankName, guildRankIndex, _ = GetGuildInfo(name)
+				if guildName then
+					buffer[name] = guildName
+					_guildCache[name] = guildName
+				end
+			end;
+		end
+	end;
+
+	return buffer
+end
+
+function GetGuildGroups(usersTable)
+	local groupsResult = {}
+
+	-- http://wowwiki.wikia.com/wiki/API_foreach
+	table.foreach(usersTable, 
+		function(key, value)
+			if groupsResult[value] then
+				groupsResult[value] = groupsResult[value] + 1
+			else
+				groupsResult[value] = 1
+			end
+		end
+	)
+	
+	-- http://wowwiki.wikia.com/wiki/API_sort
+	-- Надо бы
+	return groupsResult
 end
