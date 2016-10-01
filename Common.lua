@@ -216,3 +216,24 @@ function GetGuildGroups(usersTable)
 	-- Надо бы
 	return groupsResult
 end
+
+local HealerSpecIds = 
+{
+	-- Druid Restoration
+	105,
+	-- Monk Mistweaver
+	270,
+	-- Holy Paladin
+	65,
+	-- Priest Discipline 
+	256, 		
+	-- Priest Holy
+	257,
+	-- Shaman Restoration
+	264,
+};
+-- Возращает количество бойцов и количество хилов у противоположных сторон на поле боя
+function GetSpecBalance()
+	-- http://wow.gamepedia.com/API_GetInspectSpecialization
+	GetInspectSpecialization
+end
