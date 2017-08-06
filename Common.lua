@@ -235,5 +235,5 @@ local HealerSpecIds =
 -- ¬озращает количество бойцов и количество хилов у противоположных сторон на поле бо€
 function GetSpecBalance()
 	-- http://wow.gamepedia.com/API_GetInspectSpecialization
-	GetInspectSpecialization
+	-- GetInspectSpecialization
 end

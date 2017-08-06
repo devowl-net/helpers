@@ -24,17 +24,16 @@ function PHSayInstance(message, markType)
 
 	lastMessage = message
 
-
 	--!!!!!!!!!!
-	print(PHFormat(message, markType))
+	--print(PHFormat(message, markType))
 	-- Hook here
-	--SendChatMessage(PHFormat(message, markType), "INSTANCE_CHAT" )
+	SendChatMessage(PHFormat(message, markType), "INSTANCE_CHAT" )
 end
 
 function PHSay(message, markType)
-	print(PHFormat(message, markType))
+	--print(PHFormat(message, markType))
 	-- Hook here
-	--SendChatMessage(PHFormat(message, markType), "SAY" )
+	SendChatMessage(PHFormat(message, markType), "SAY" )
 end
 
 function __merge(str1, str2, str3)
