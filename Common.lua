@@ -154,7 +154,9 @@ function GetShortPlayerName(playerName)
 	return string.sub(playerName,  1, dPos - 1)
 end
 
-
+function HasMercenaryContract()
+	-- http://www.wowhead.com/spell=193475/mercenary-contract
+end
 
 function GetRaidGuilds()
 	local buffer = {}

@@ -16,7 +16,7 @@ function PHFormat(message, markType)
 end
 
 local lastMessage = nil
-function PHSayInstance(message, markType)
+function PHSayInstance(message, markType, isWarning)
 
 	if message == lastMessage then
 		return
@@ -27,7 +27,13 @@ function PHSayInstance(message, markType)
 	--!!!!!!!!!!
 	--print(PHFormat(message, markType))
 	-- Hook here
-	SendChatMessage(PHFormat(message, markType), "INSTANCE_CHAT" )
+	
+	local chat = "INSTANCE_CHAT"
+	if isWarning then
+		chat = "RAID_WARNING"
+	end
+	
+	SendChatMessage(PHFormat(message, markType), chat )
 end
 
 function PHSay(message, markType)
