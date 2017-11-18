@@ -239,3 +239,10 @@ function GetSpecBalance()
 	-- http://wow.gamepedia.com/API_GetInspectSpecialization
 	-- GetInspectSpecialization
 end
+
+function GetSeconds()
+	local time = date("*t")
+	-- returns { hour=1, min=31, sec=41, wday=1, day=14, month=6, year=2009, yday=165, isdst=true }
+
+	return time.sec + time.min * 60 + time.hour * 3600;
+end
