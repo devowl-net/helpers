@@ -246,3 +246,91 @@ function GetSeconds()
 
 	return time.sec + time.min * 60 + time.hour * 3600;
 end
+
+-- Узнать роль игрока (Melee, Ranged, Healer)
+function GetPlayerRole(classToken, talentSpec)
+	local unknownRole = "?"
+
+	if classToken == nil or talentSpec == nil then
+		return unknownRole
+	end
+
+	local roleSpec = _L.BgRoles[classToken]
+
+	return roleSpec[talentSpec]
+end
+
+function PrintRoles()
+	local healers_H = 0
+	local melees_H = 0
+	local ranged_H = 0
+	local unknown_H = 0
+
+	local healers_A = 0
+	local melees_A = 0
+	local ranged_A = 0
+	local unknown_A = 0
+
+	local numScores = GetNumBattlefieldScores();
+	
+	-- Returns basic scoreboard information for a battleground/arena participant. Does not include 
+	-- battleground-specific score data (e.g. flags captured in Warsong Gulch, towers assaulted in Alterac Valley, etc)
+	-- Мониторим ливеров
+	for i=1, numScores do
+		local 
+			name, 
+			killingBlows, 
+			honorableKills, 
+			deaths, 
+			honorGained, 
+			faction,
+			_,
+			class,
+			classToken,
+			_,
+			_,
+			_,
+			_,
+			_,
+			_,
+			talentSpec = GetBattlefieldScore(i);
+		
+		local role = GetPlayerRole(classToken, talentSpec)
+		local unknownRole = "?"
+
+		-- 0 - Horde (Battleground) / Green Team (Arena)
+		-- 1 - Alliance (Battleground) / Gold Team (Arena)
+		if faction == 0 then 
+			if role == unknownRole then
+				unknown_H = unknown_H + 1
+			elseif role == "Melee" then
+				melees_H = melees_H + 1
+			elseif role == "Ranged" then
+				ranged_H = ranged_H + 1
+			elseif role == "Healer" then
+				healers_H = healers_H + 1
+			end
+		else
+			if role == unknownRole then
+				unknown_A = unknown_A + 1
+			elseif role == "Melee" then
+				melees_A = melees_A + 1
+			elseif role == "Ranged" then
+				ranged_A = ranged_A + 1
+			elseif role == "Healer" then
+				healers_A = healers_A + 1
+			end
+		end
+	end
+
+	if numScores > 0 then
+		PrintRoleResult("Horde    ", unknown_H, melees_H, ranged_H, healers_H);
+		PrintRoleResult("Alliance ", unknown_A, melees_A, ranged_A, healers_A);
+	end
+end
+
+function PrintRoleResult(faction, unknown, melees, ranged, healers)
+	--local resultString = faction.." Healers-"..healers.." Melees-"..melees.." Ranged-"..ranged.." ?-"..unknown;
+	local resultString = faction.." Healers-"..healers.." Melees-"..melees.." Ranged-"..ranged;
+	PHSayInstance(resultString, "triangle")
+end
