@@ -252,6 +252,9 @@ function GetPlayerRole(classToken, talentSpec)
 	local unknownRole = "?"
 
 	if classToken == nil or talentSpec == nil then
+		print("Unknown")
+		print(classToken)
+		print(talentSpec)
 		return unknownRole
 	end
 
@@ -323,14 +326,24 @@ function PrintRoles()
 		end
 	end
 
+	local aCount = unknown_A + melees_A + ranged_A + healers_A;
+	local hCount = unknown_H + melees_H + ranged_H + healers_H; 
+	
 	if numScores > 0 then
+		PHSayInstance("[A/H]: "..aCount.."/"..hCount, "diamond")
+		--print("[A/H]: "..aCount.."/"..hCount, "diamond")
 		PrintRoleResult("Horde    ", unknown_H, melees_H, ranged_H, healers_H);
 		PrintRoleResult("Alliance ", unknown_A, melees_A, ranged_A, healers_A);
 	end
 end
 
 function PrintRoleResult(faction, unknown, melees, ranged, healers)
-	--local resultString = faction.." Healers-"..healers.." Melees-"..melees.." Ranged-"..ranged.." ?-"..unknown;
 	local resultString = faction.." Healers-"..healers.." Melees-"..melees.." Ranged-"..ranged;
+
+	if unknown > 0 then
+		resultString = resultString.." ?-"..unknown
+	end
+
 	PHSayInstance(resultString, "triangle")
+	--print(resultString);
 end
