@@ -1,5 +1,4 @@
 
-local Common = { };
 local _guildCache = {}
 
 function IsInsidePvpZone()

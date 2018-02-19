@@ -24,10 +24,6 @@ function PHSayInstance(message, markType, isWarning)
 
 	lastMessage = message
 
-	--!!!!!!!!!!
-	--print(PHFormat(message, markType))
-	-- Hook here
-	
 	local chat = "INSTANCE_CHAT"
 	if isWarning then
 		chat = "RAID_WARNING"
@@ -40,6 +36,10 @@ function PHSay(message, markType)
 	--print(PHFormat(message, markType))
 	-- Hook here
 	SendChatMessage(PHFormat(message, markType), "SAY" )
+end
+
+function PHSayParty(message, markType)
+	SendChatMessage(PHFormat(message, markType), "PARTY" )
 end
 
 function __merge(str1, str2, str3)
